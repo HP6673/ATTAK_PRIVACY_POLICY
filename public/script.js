@@ -1,5 +1,5 @@
-// public/script.js
-// Sends contact form data to your Google Apps Script web app.
+// script.js — sends contact form data to your Google Apps Script web app
+// Replace FUNCTION_URL and SECRET if they change
 
 const FUNCTION_URL = 'https://script.google.com/macros/s/AKfycbyyAx-ahZyx9ZWxNBTePLLm_w5TNVmx4rzEq41AqDb212xndnxPzgVWcP-3I2S7oIE96g/exec';
 const SECRET = '2184'; // must match EXPECTED_SECRET in your Apps Script
@@ -63,15 +63,19 @@ form.addEventListener('submit', async (ev) => {
       body: JSON.stringify(data)
     });
 
-    const result = await resp.json().catch(() => ({}));
+    // Try parse JSON if possible
+    let result = null;
+    try { result = await resp.json(); } catch (e) { result = null; }
+
     if (resp.ok) {
-      setStatus('Message sent — thank you!', true);
-      form.reset();
+      // Success: redirect to thank-you page
+      window.location.href = 'thankyou.html';
     } else {
-      setStatus(result.error || 'Unable to send message. Try again later.', false);
+      console.error('Server error response', resp.status, result);
+      setStatus((result && result.error) || 'Unable to send message. Try again later.', false);
     }
   } catch (err) {
-    console.error(err);
+    console.error('Network error', err);
     setStatus('Network error. Please check your connection and try again.', false);
   } finally {
     submitBtn.disabled = false;
