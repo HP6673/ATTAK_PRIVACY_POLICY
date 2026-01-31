@@ -1,5 +1,5 @@
 // script.js — posts to your Apps Script and redirects on success
-const FUNCTION_URL = 'https://script.google.com/macros/s/AKfycby1sXw-6PvA56mrqzOF2nyUNqmVwJu6dOzSVAnTaAQHXO46S4dJlT1yEkjVNhD-hlW3CQ/exec';
+const FUNCTION_URL = 'https://script.google.com/macros/s/AKfycbzT3pSw_K7if9hNResrpIIYbWHYOAXtvQDYKDdf44O-aJRGtdGNmo7n1xz-BUSWaAUX/exec';
 const SECRET = '2184';
 
 const form = document.getElementById('contactForm');
