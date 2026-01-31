@@ -1,4 +1,4 @@
-// public/script.js
+// script.js — posts to your Apps Script and redirects on success
 const FUNCTION_URL = 'https://script.google.com/macros/s/AKfycby1sXw-6PvA56mrqzOF2nyUNqmVwJu6dOzSVAnTaAQHXO46S4dJlT1yEkjVNhD-hlW3CQ/exec';
 const SECRET = '2184';
 
@@ -47,17 +47,20 @@ form.addEventListener('submit', async (ev) => {
       body: JSON.stringify(data)
     });
 
-    let result = null;
-    try { result = await resp.json(); } catch (e) { result = null; }
+    const text = await resp.text().catch(() => null);
+    let json = null;
+    try { json = JSON.parse(text); } catch (e) { /* not JSON */ }
 
     if (resp.ok) {
+      // success -> thank you page
       window.location.href = 'thankyou.html';
     } else {
-      console.error('Server error response', resp.status, result);
-      setStatus((result && result.error) || 'Unable to send message. Try again later.', false);
+      const serverMsg = (json && (json.error || JSON.stringify(json))) || text || `HTTP ${resp.status}`;
+      setStatus('Server error: ' + serverMsg, false);
+      console.error('Server error:', resp.status, serverMsg);
     }
   } catch (err) {
-    console.error('Network error', err);
+    console.error('Network error:', err);
     setStatus('Network error. Please check your connection and try again.', false);
   } finally {
     submitBtn.disabled = false;
